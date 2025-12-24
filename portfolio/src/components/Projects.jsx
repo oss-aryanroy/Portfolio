@@ -6,20 +6,20 @@ const projects = [
     title: 'VIT-AP Faculty Ranker',
     description: 'A platform to rank and review faculty members at VIT-AP University',
     tags: ['React', 'Web Dev', 'MongoDB'],
-    link: '#',
+    link: 'https://github.com/oss-aryanroy/Faculty-Ranker',
     website: 'https://vitap-faculty-ranker.online',
   },
   {
     title: 'ThatCountingBot',
     description: 'An automated counting bot with advanced features',
     tags: ['Discord API', 'Bot Development', 'Automation', 'Python'],
-    link: '#',
+    link: 'https://github.com/oss-aryanroy/ThatCountingBot',
   },
   {
     title: 'Spotifyseek',
     description: 'Download your spotify playlist as Hi-Res FLAC audio files using the Soulseek P2P network.',
-    tags: ['Web Development', 'Spotify API', 'Automation'], 
-    link: '#'
+    tags: ['Web Development', 'Spotify API', 'Automation'],
+    link: 'https://github.com/oss-aryanroy/Spotifyseek',
   }
 ]
 
@@ -34,7 +34,7 @@ export default function Projects() {
       >
         Featured Projects
       </motion.h2>
-      
+
       <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         {projects.map((project, i) => (
           <motion.div
@@ -43,14 +43,13 @@ export default function Projects() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.2, duration: 0.6 }}
-            whileHover={{ 
-              scale: 1.05, 
+            whileHover={{
+              scale: 1.05,
               boxShadow: '0 0 60px rgba(180, 140, 160, 0.6), 0 0 100px rgba(212, 180, 196, 0.3)',
               y: -10
             }}
-            className={`bg-gradient-to-br from-[#3a2a34]/60 to-[#4a3a44]/60 backdrop-blur-sm p-8 rounded-2xl border border-[#b48ca0]/30 transition-all shadow-xl shadow-[#b48ca0]/10 ${
-              projects.length % 2 !== 0 && i === projects.length - 1 ? 'md:col-span-2 md:max-w-2xl md:mx-auto' : ''
-            }`}
+            className={`bg-gradient-to-br from-[#3a2a34]/60 to-[#4a3a44]/60 backdrop-blur-sm p-8 rounded-2xl border border-[#b48ca0]/30 transition-all shadow-xl shadow-[#b48ca0]/10 ${projects.length % 2 !== 0 && i === projects.length - 1 ? 'md:col-span-2 md:max-w-2xl md:mx-auto' : ''
+              }`}
           >
             <h3 className="text-2xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-[#b48ca0] to-[#d4b4c4]">{project.title}</h3>
             <p className="text-gray-300 mb-4">{project.description}</p>
