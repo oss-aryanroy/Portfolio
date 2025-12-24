@@ -20,7 +20,7 @@ export default function Hero() {
           className="mb-8 pt-24"
         >
           <img
-            src="src/assets/pfp.jpg"
+            src="/pfp.jpg"
             alt="Profile"
             className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full mx-auto border-4 border-[#b48ca0]/50 shadow-2xl shadow-[#b48ca0]/30 object-cover"
           />
@@ -61,7 +61,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.a
-            href="src/assets/resume.pdf"
+            href="/resume.pdf"
             download
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
