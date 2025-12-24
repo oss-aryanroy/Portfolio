@@ -4,14 +4,14 @@ import { Download } from 'lucide-react'
 export default function Hero() {
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden pb-32">
-      <div 
+      <div
         className="absolute inset-0 opacity-20 pointer-events-none"
         style={{
           backgroundImage: 'radial-gradient(circle, rgba(180, 140, 160, 0.3) 2px, transparent 2px)',
           backgroundSize: '50px 50px',
         }}
       />
-      
+
       <div className="relative z-10 text-center px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -19,8 +19,8 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
           className="mb-8 pt-24"
         >
-          <img 
-            src="src/assets/pfp.jpg" 
+          <img
+            src="src/assets/pfp.jpg"
             alt="Profile"
             className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full mx-auto border-4 border-[#b48ca0]/50 shadow-2xl shadow-[#b48ca0]/30 object-cover"
           />
@@ -30,9 +30,9 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
         >
-          <motion.h1 
+          <motion.h1
             className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold mb-6 gradient-text leading-tight"
-            animate={{ 
+            animate={{
               scale: [1, 1.02, 1],
             }}
             transition={{
@@ -59,14 +59,14 @@ export default function Hero() {
           >
             Building innovative solutions and exploring the intersection of software engineering and data science.
           </motion.p>
-          
+
           <motion.a
-            href="/resume.pdf"
+            href="src/assets/resume.pdf"
             download
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            whileHover={{ 
+            whileHover={{
               scale: 1.05,
               boxShadow: '0 0 30px rgba(180, 140, 160, 0.5)'
             }}

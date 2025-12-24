@@ -22,8 +22,8 @@ export default function Navbar() {
             whileHover={{ scale: 1.05 }}
             className="relative group"
           >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#b48ca0]/20 to-[#d4b4c4]/20 border border-[#b48ca0]/30 flex items-center justify-center backdrop-blur-sm group-hover:border-[#b48ca0]/50 transition-all group-hover:shadow-lg group-hover:shadow-[#b48ca0]/20">
-              <span className="text-xl font-bold gradient-text">AR</span>
+            <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#b48ca0]/30 group-hover:border-[#b48ca0]/50 transition-all group-hover:shadow-lg group-hover:shadow-[#b48ca0]/20 flex items-center justify-center bg-[#1a1a1a]/60">
+              <img src="/vite.svg" alt="AR Logo" className="w-8 h-8" />
             </div>
           </motion.div>
         </Link>
