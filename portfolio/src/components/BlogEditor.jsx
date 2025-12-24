@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Save, Eye, Upload, Bold, Italic, Strikethrough, Code, List, ListOrdered, Link as LinkIcon, Heading1, Heading2, Heading3, Quote, Minus, AlignLeft, AlignCenter, AlignRight, AlignJustify } from 'lucide-react'
 import BlogPreview from './BlogPreview'
+import { API_URL } from '../config/api'
 
 export default function BlogEditor({ onSave }) {
   const [title, setTitle] = useState('')
@@ -66,7 +67,7 @@ export default function BlogEditor({ onSave }) {
           formData.append('image', file)
 
           // Upload to backend
-          const response = await fetch('http://localhost:3001/api/upload-image', {
+          const response = await fetch(`${API_URL}/api/upload-image`, {
             method: 'POST',
             body: formData
           })

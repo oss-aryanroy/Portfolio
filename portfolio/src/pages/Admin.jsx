@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Lock, Loader2 } from 'lucide-react'
 import BlogEditor from '../components/BlogEditor'
-
-const API_URL = 'http://localhost:3001'
+import { API_URL } from '../config/api'
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)

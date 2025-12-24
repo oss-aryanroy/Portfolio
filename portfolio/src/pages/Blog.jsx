@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Loader2 } from 'lucide-react'
 import BlogList from '../components/BlogList'
-
-const API_URL = 'http://localhost:3001'
+import { API_URL } from '../config/api'
 
 export default function Blog() {
   const [posts, setPosts] = useState([])

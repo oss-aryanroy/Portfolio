@@ -5,8 +5,7 @@ import { marked } from 'marked'
 import { ArrowLeft, Trash2, Loader2 } from 'lucide-react'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github-dark.css'
-
-const API_URL = 'http://localhost:3001'
+import { API_URL } from '../config/api'
 
 export default function BlogPost() {
   const { id } = useParams()
