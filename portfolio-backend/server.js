@@ -253,7 +253,7 @@ app.get('/api/health', (req, res) => {
 })
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, "127.0.0.1", () => {
     console.log(`\n🚀 Portfolio API server running on http://localhost:${PORT}`)
     console.log(`☁️  Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME || 'NOT CONFIGURED'}`)
     console.log(`🔐 Auth: JWT-based authentication enabled\n`)
