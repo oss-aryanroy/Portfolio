@@ -11,65 +11,69 @@ export default function Navbar() {
 
   return (
     <>
-      {/* AR Logo - Absolute positioned, stays at top-left */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="absolute top-6 left-6 z-[60]"
-      >
-        <Link to="/">
+      {/* Top bar container - Logo, Nav Pill, and Toggle */}
+      <div className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 sm:pt-6">
+        {/* Flex container for all nav elements */}
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          {/* AR Logo */}
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="relative group"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
           >
-            <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#b48ca0]/30 group-hover:border-[#b48ca0]/50 transition-all group-hover:shadow-lg group-hover:shadow-[#b48ca0]/20 flex items-center justify-center bg-[#1a1a1a]/60">
-              <img src="/vite.svg" alt="AR Logo" className="w-8 h-8" />
-            </div>
+            <Link to="/">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="relative group"
+              >
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-[#b48ca0]/30 group-hover:border-[#b48ca0]/50 transition-all group-hover:shadow-lg group-hover:shadow-[#b48ca0]/20 flex items-center justify-center bg-[#1a1a1a]/60 backdrop-blur-sm">
+                  <img src="/vite.svg" alt="AR Logo" className="w-6 h-6 sm:w-8 sm:h-8" />
+                </div>
+              </motion.div>
+            </Link>
           </motion.div>
-        </Link>
-      </motion.div>
 
-      {/* Theme Toggle - Absolute positioned, stays at top-right */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="absolute top-6 right-6 z-[60]"
-      >
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={toggleTheme}
-          className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#b48ca0]/10 to-[#d4b4c4]/10 border border-[#b48ca0]/30 flex items-center justify-center backdrop-blur-sm hover:border-[#b48ca0]/50 transition-all hover:shadow-lg hover:shadow-[#b48ca0]/20"
-          aria-label="Toggle theme"
-        >
-          {theme === 'dark' ? (
-            <Sun size={20} className="text-[#d4b4c4]" />
-          ) : (
-            <Moon size={20} className="text-[#d4b4c4]" />
-          )}
-        </motion.button>
-      </motion.div>
+          {/* Center Navigation Pill */}
+          <motion.nav
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="flex-shrink-0"
+          >
+            <div className="flex items-center bg-[#1a1a1a]/60 backdrop-blur-md rounded-full px-3 sm:px-4 py-1.5 sm:py-2 border border-[#b48ca0]/20">
+              <NavLink to="/" active={isActive('/')}>
+                Home
+              </NavLink>
 
-      {/* Center Navigation Pill - Fixed, follows on scroll */}
-      <motion.nav
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1 }}
-        className="fixed top-6 left-0 right-0 z-50 flex justify-center"
-      >
-        <div className="flex items-center bg-[#1a1a1a]/60 backdrop-blur-md rounded-full px-4 py-2 border border-[#b48ca0]/20">
-          <NavLink to="/" active={isActive('/')}>
-            Home
-          </NavLink>
+              {/* Divider */}
+              <div className="h-4 sm:h-5 w-px bg-[#b48ca0]/30 mx-2 sm:mx-3"></div>
 
-          {/* Divider */}
-          <div className="h-5 w-px bg-[#b48ca0]/30 mx-3"></div>
+              <NavLink to="/blog" active={isActive('/blog')}>
+                Blog
+              </NavLink>
+            </div>
+          </motion.nav>
 
-          <NavLink to="/blog" active={isActive('/blog')}>
-            Blog
-          </NavLink>
+          {/* Theme Toggle */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={toggleTheme}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#b48ca0]/10 to-[#d4b4c4]/10 border border-[#b48ca0]/30 flex items-center justify-center backdrop-blur-sm hover:border-[#b48ca0]/50 transition-all hover:shadow-lg hover:shadow-[#b48ca0]/20"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? (
+                <Sun size={18} className="text-[#d4b4c4] sm:w-5 sm:h-5" />
+              ) : (
+                <Moon size={18} className="text-[#d4b4c4] sm:w-5 sm:h-5" />
+              )}
+            </motion.button>
+          </motion.div>
         </div>
-      </motion.nav>
+      </div>
     </>
   )
 }
@@ -79,7 +83,7 @@ function NavLink({ to, active, children }) {
     <Link to={to}>
       <motion.span
         whileHover={{ scale: 1.05 }}
-        className={`px-3 py-1 text-sm font-medium transition-all ${active
+        className={`px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${active
           ? 'text-white'
           : 'text-gray-400 hover:text-[#d4b4c4]'
           }`}

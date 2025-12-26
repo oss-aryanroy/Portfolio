@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { marked } from 'marked'
 import { ArrowLeft, Trash2, Loader2 } from 'lucide-react'
@@ -15,6 +15,7 @@ export default function BlogPost() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
+  const contentRef = useRef(null)
 
   const isAdmin = !!sessionStorage.getItem('auth_token')
 
@@ -30,7 +31,14 @@ export default function BlogPost() {
         const foundPost = await response.json()
         setPost(foundPost)
 
-        // Configure marked with syntax highlighting
+        // Configure marked with syntax highlighting and custom renderer
+        const renderer = new marked.Renderer()
+
+        // Wrap tables in a scrollable container for mobile
+        renderer.table = (header, body) => {
+          return `<div class="table-wrapper"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>`
+        }
+
         marked.setOptions({
           breaks: true,
           gfm: true,
@@ -38,6 +46,7 @@ export default function BlogPost() {
           mangle: false,
           sanitize: false,
           pedantic: false,
+          renderer: renderer,
           highlight: function (code, lang) {
             if (lang && hljs.getLanguage(lang)) {
               try {
@@ -89,12 +98,21 @@ export default function BlogPost() {
     }
   }
 
-  // Apply syntax highlighting to any code blocks that weren't caught
+  // Apply syntax highlighting after DOM is ready
   useEffect(() => {
-    if (html) {
-      document.querySelectorAll('.blog-content pre code').forEach((block) => {
-        hljs.highlightElement(block)
-      })
+    if (html && contentRef.current) {
+      // Use setTimeout to ensure DOM is fully updated after React render
+      const timeoutId = setTimeout(() => {
+        const container = contentRef.current
+        if (!container) return
+
+        // Apply syntax highlighting
+        container.querySelectorAll('pre code').forEach((block) => {
+          hljs.highlightElement(block)
+        })
+      }, 0)
+
+      return () => clearTimeout(timeoutId)
     }
   }, [html])
 
@@ -115,7 +133,7 @@ export default function BlogPost() {
   }
 
   return (
-    <div className="pt-32 px-6 pb-24 max-w-4xl mx-auto min-h-screen">
+    <div className="pt-32 px-4 md:px-6 pb-24 max-w-4xl mx-auto min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <motion.button
           initial={{ opacity: 0, x: -20 }}
@@ -151,7 +169,7 @@ export default function BlogPost() {
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-[#3a2a34]/60 to-[#4a3a44]/60 backdrop-blur-sm p-8 md:p-12 rounded-2xl border border-[#b48ca0]/30 shadow-xl shadow-[#b48ca0]/10"
+        className="bg-gradient-to-br from-[#3a2a34]/60 to-[#4a3a44]/60 backdrop-blur-sm p-4 sm:p-6 md:p-12 rounded-2xl border border-[#b48ca0]/30 shadow-xl shadow-[#b48ca0]/10"
       >
         {post.image && post.image !== '' && (
           <img
@@ -168,6 +186,7 @@ export default function BlogPost() {
         <p className="text-gray-400 text-sm mb-8">{post.date}</p>
 
         <div
+          ref={contentRef}
           className="blog-content"
           dangerouslySetInnerHTML={{ __html: html }}
         />

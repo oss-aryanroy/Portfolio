@@ -122,11 +122,45 @@ body::before {
   background: linear-gradient(180deg, #d4b4c4, #b48ca0);
 }
 
+/* Mobile responsive adjustments for blog layout */
+@media (max-width: 768px) {
+  .blog-content {
+    font-size: 0.95rem;
+  }
+
+  .blog-content h1 {
+    font-size: 1.75rem;
+  }
+
+  .blog-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .blog-content h3 {
+    font-size: 1.25rem;
+  }
+
+  .blog-content pre {
+    padding: 0.75rem;
+    margin: 1rem 0;
+  }
+
+  .blog-content pre code {
+    font-size: 0.8rem;
+  }
+
+  .blog-content blockquote {
+    padding: 0.75rem 1rem;
+  }
+}
+
 /* Blog Content Styles */
 .blog-content {
   color: var(--text-primary);
   line-height: 1.8;
   font-size: 1.05rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .blog-content h1,
@@ -271,20 +305,53 @@ body::before {
   margin: 2rem 0;
 }
 
-.blog-content table {
+/* Table wrapper for horizontal scrolling on mobile (if applied via JS) */
+.blog-content .table-wrapper {
+  display: block;
   width: 100%;
-  border-collapse: collapse;
+  max-width: 100%;
+  overflow-x: auto;
   margin: 1.5rem 0;
-  overflow: hidden;
   border-radius: 0.5rem;
   border: 1px solid rgba(180, 140, 160, 0.3);
+  -webkit-overflow-scrolling: touch;
+}
+
+.blog-content .table-wrapper table {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  display: table;
+}
+
+/* Direct table styling - Pure CSS horizontal scroll */
+.blog-content table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(180, 140, 160, 0.3);
+  margin: 1.5rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.blog-content table thead {
+  display: table-header-group;
+}
+
+.blog-content table tbody {
+  display: table-row-group;
 }
 
 .blog-content table th,
 .blog-content table td {
+  display: table-cell;
   padding: 0.75rem 1rem;
   text-align: left;
   border-bottom: 1px solid rgba(180, 140, 160, 0.2);
+  white-space: nowrap;
 }
 
 .blog-content table th {
@@ -299,6 +366,30 @@ body::before {
 
 .blog-content table tr:hover {
   background: rgba(180, 140, 160, 0.05);
+}
+
+.blog-content table caption {
+  display: table-caption;
+  caption-side: top;
+  text-align: center;
+  padding: 0.75rem 0;
+  font-weight: 600;
+  color: #d4b4c4;
+  font-size: 1.1rem;
+  white-space: normal;
+  width: calc(100vw - 3rem);
+  max-width: calc(100% + 2rem);
+  margin-left: -1rem;
+}
+
+/* Mobile-specific table adjustments */
+@media (max-width: 768px) {
+
+  .blog-content table th,
+  .blog-content table td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
 }
 
 .blog-content img {
