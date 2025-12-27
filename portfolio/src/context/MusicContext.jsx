@@ -1,9 +1,8 @@
 import { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react'
+import { API_URL } from '../config/api'
 
 const MusicContext = createContext(null)
 
-// Backend API URL
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 const TRACKS_PER_PAGE = 10
 
 export function MusicProvider({ children }) {
