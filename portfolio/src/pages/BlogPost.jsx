@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { marked } from 'marked'
-import { ArrowLeft, Trash2, Loader2 } from 'lucide-react'
+import { ArrowLeft, Trash2, Loader2, Pencil } from 'lucide-react'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github-dark.css'
 import { API_URL } from '../config/api'
@@ -147,22 +147,35 @@ export default function BlogPost() {
         </motion.button>
 
         {isAdmin && (
-          <motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600/20 hover:bg-red-600/40 border border-red-500/50 rounded-lg text-red-400 transition disabled:opacity-50"
-          >
-            {isDeleting ? (
-              <Loader2 className="animate-spin" size={18} />
-            ) : (
-              <Trash2 size={18} />
-            )}
-            Delete
-          </motion.button>
+          <div className="flex items-center gap-3">
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate(`/admin/edit/${id}`)}
+              className="flex items-center gap-2 px-4 py-2 bg-[#b48ca0]/20 hover:bg-[#b48ca0]/40 border border-[#b48ca0]/50 rounded-lg text-[#d4b4c4] transition"
+            >
+              <Pencil size={18} />
+              Edit
+            </motion.button>
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="flex items-center gap-2 px-4 py-2 bg-red-600/20 hover:bg-red-600/40 border border-red-500/50 rounded-lg text-red-400 transition disabled:opacity-50"
+            >
+              {isDeleting ? (
+                <Loader2 className="animate-spin" size={18} />
+              ) : (
+                <Trash2 size={18} />
+              )}
+              Delete
+            </motion.button>
+          </div>
         )}
       </div>
 

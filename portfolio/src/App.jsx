@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import Admin from './pages/Admin'
+import EditPost from './pages/EditPost'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<BlogPost />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/edit/:id" element={<EditPost />} />
       </Routes>
     </div>
   )
