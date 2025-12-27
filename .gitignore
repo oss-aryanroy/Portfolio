@@ -30,3 +30,9 @@ coverage/
 
 # Vite
 .vite/
+
+# Music files
+*/music/ogg/
+*/music/covers/
+*/music/tracks.json
+*/music/flac/

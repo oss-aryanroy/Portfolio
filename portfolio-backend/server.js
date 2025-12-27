@@ -4,9 +4,16 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { v2 as cloudinary } from 'cloudinary'
 import Blog from './models/Blog.js'
 import { authenticateToken } from './middleware/auth.js'
+
+// ES Module dirname workaround
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Load environment variables
 dotenv.config()
@@ -38,7 +45,8 @@ const corsOptions = {
             'https://www.aryandoes.tech',
             'http://aryandoes.tech',
             'http://www.aryandoes.tech',
-            'http://localhost:5173'
+            'http://localhost:5173',
+            'http://localhost:4173'
         ]
 
         if (allowedOrigins.includes(origin)) {
@@ -250,6 +258,132 @@ app.get('/api/health', (req, res) => {
             cloudName: process.env.CLOUDINARY_CLOUD_NAME
         }
     })
+})
+
+// ============================================
+// MUSIC STREAMING ENDPOINTS
+// ============================================
+
+// Serve music cover images
+app.use('/api/music/covers', express.static(path.join(__dirname, 'music', 'covers')))
+
+// Load tracks from JSON file (reloads on each request for live updates)
+function loadMusicTracks() {
+    const tracksPath = path.join(__dirname, 'music', 'tracks.json')
+    try {
+        const data = fs.readFileSync(tracksPath, 'utf8')
+        return JSON.parse(data)
+    } catch (error) {
+        console.error('Failed to load tracks.json:', error.message)
+        return []
+    }
+}
+
+// GET track list with pagination
+app.get('/api/music/tracks', (req, res) => {
+    const musicTracks = loadMusicTracks()
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+
+    const paginatedTracks = musicTracks.slice(startIndex, endIndex)
+    const tracks = paginatedTracks.map(track => ({
+        id: track.id,
+        title: track.title,
+        artist: track.artist,
+        cover: `/api/music/covers/${track.cover}`,
+        src: `/api/music/stream/${track.id}`
+    }))
+
+    res.json({
+        tracks,
+        pagination: {
+            page,
+            limit,
+            total: musicTracks.length,
+            totalPages: Math.ceil(musicTracks.length / limit),
+            hasMore: endIndex < musicTracks.length
+        }
+    })
+})
+
+// Stream music with range request support and quality selection
+app.get('/api/music/stream/:id', (req, res) => {
+    const musicTracks = loadMusicTracks()
+    const track = musicTracks.find(t => t.id === parseInt(req.params.id))
+    const quality = req.query.quality || 'flac' // 'flac' or 'ogg'
+
+    if (!track) {
+        return res.status(404).json({ error: 'Track not found' })
+    }
+
+    // Get filename based on quality - support both old and new format
+    let filename
+    if (track.files) {
+        filename = track.files[quality] || track.files.flac || track.files.ogg
+    } else {
+        filename = track.filename // Fallback for old format
+    }
+
+    if (!filename) {
+        return res.status(404).json({ error: 'Quality not available' })
+    }
+
+    // Files are stored in quality subfolders (flac/ or ogg/) or root
+    let filePath = path.join(__dirname, 'music', quality, filename)
+
+    // Fallback to root music folder if not in subfolder
+    if (!fs.existsSync(filePath)) {
+        filePath = path.join(__dirname, 'music', filename)
+    }
+
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+        console.error(`🎵 Music file not found: ${filePath}`)
+        return res.status(404).json({ error: 'Music file not found' })
+    }
+
+    const stat = fs.statSync(filePath)
+    const fileSize = stat.size
+    const range = req.headers.range
+
+    // Determine content type
+    const ext = path.extname(filename).toLowerCase()
+    const contentTypes = {
+        '.flac': 'audio/flac',
+        '.ogg': 'audio/ogg',
+        '.mp3': 'audio/mpeg',
+        '.wav': 'audio/wav'
+    }
+    const contentType = contentTypes[ext] || 'audio/mpeg'
+
+    if (range) {
+        // Parse range header
+        const parts = range.replace(/bytes=/, '').split('-')
+        const start = parseInt(parts[0], 10)
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1
+        const chunkSize = (end - start) + 1
+
+        const file = fs.createReadStream(filePath, { start, end })
+        const headers = {
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Accept-Ranges': 'bytes',
+            'Content-Length': chunkSize,
+            'Content-Type': contentType
+        }
+
+        res.writeHead(206, headers)
+        file.pipe(res)
+    } else {
+        // No range requested, send entire file
+        const headers = {
+            'Content-Length': fileSize,
+            'Content-Type': contentType
+        }
+        res.writeHead(200, headers)
+        fs.createReadStream(filePath).pipe(res)
+    }
 })
 
 // Start server
