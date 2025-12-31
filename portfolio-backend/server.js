@@ -66,7 +66,7 @@ app.use(express.json({ limit: '50mb' }))
 const storage = multer.memoryStorage()
 const upload = multer({
     storage,
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 50 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const allowedTypes = /jpeg|jpg|png|gif|webp|bmp|svg/
         const mimetype = allowedTypes.test(file.mimetype)
@@ -384,6 +384,26 @@ app.get('/api/music/stream/:id', (req, res) => {
         res.writeHead(200, headers)
         fs.createReadStream(filePath).pipe(res)
     }
+})
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('SERVER ERROR:', err)
+
+    // Handle Multer file size error
+    if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(413).json({
+                error: 'File too large',
+                details: 'The uploaded file exceeds the 50MB limit'
+            })
+        }
+    }
+
+    // Handle other errors
+    res.status(err.status || 500).json({
+        error: err.message || 'Internal Server Error'
+    })
 })
 
 // Start server
